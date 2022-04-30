@@ -1,7 +1,6 @@
 import {Component} from 'react'
 import Loader from 'react-loader-spinner'
 import Cookies from 'js-cookie'
-import {Link} from 'react-router-dom'
 
 import JobCard from '../JobCard'
 import FilterSearch from '../FilterSearch'
@@ -59,7 +58,7 @@ class Jobs extends Component {
     profileData: [],
     jobsList: [],
     apiStatus: apiStatusConstants.initial,
-    activeJobId: '',
+    activeJobId: [],
     searchInput: '',
     activeSalaryId: '',
     profileApiStatus: apiStatusConstants.initial,
@@ -73,6 +72,8 @@ class Jobs extends Component {
   getJobs = async () => {
     this.setState({
       apiStatus: apiStatusConstants.inProgress,
+      activeJobId: [],
+      activeSalaryId: '',
     })
 
     const jwtToken = Cookies.get('jwt_token')
@@ -104,7 +105,7 @@ class Jobs extends Component {
       })
       console.log(data)
     } else {
-      this.setState({apiStatus: apiStatusConstants.success})
+      this.setState({apiStatus: apiStatusConstants.failure})
     }
   }
 
@@ -118,6 +119,13 @@ class Jobs extends Component {
 
   enterSearchInput = () => {
     this.getJobs()
+  }
+
+  changeEmploymentType = type => {
+    this.setState(
+      prev => ({activeJobId: [...prev.activeJobId, type]}),
+      this.getJobs,
+    )
   }
 
   changeSearchInput = searchInput => {
@@ -137,6 +145,9 @@ class Jobs extends Component {
       <p className="products-failure-description">
         We cannot seem to find the page you are looking for
       </p>
+      <button type="button" onClick={this.getJobs} className="retry-button">
+        Retry
+      </button>
     </div>
   )
 
@@ -200,37 +211,37 @@ class Jobs extends Component {
   }
 
   renderLoadingView = () => (
-    <div className="products-loader-container">
+    <div className="products-loader-container" testid="loader">
       <Loader type="ThreeDots" color="#0b69ff" height="50" width="50" />
     </div>
   )
-
-  renderAllJobsResult = () => {
-    const {apiStatus} = this.state
-
-    switch (apiStatus) {
-      case apiStatusConstants.success:
-        return this.renderJobsListView()
-      case apiStatusConstants.failure:
-        return this.renderFailureView()
-      case apiStatusConstants.inProgress:
-        return this.renderLoadingView()
-      default:
-        return null
-    }
-  }
 
   renderProfileFailureView = () => (
     <div className="profile-container">
       <button
         type="button"
-        onClick={this.renderProfile()}
+        onClick={this.renderProfile}
         className="retry-button"
       >
         Retry
       </button>
     </div>
   )
+
+  renderAllJobsResult = () => {
+    const {apiStatus} = this.state
+    console.log(apiStatus)
+    switch (apiStatus) {
+      case apiStatusConstants.success:
+        return this.renderJobsListView()
+      case apiStatusConstants.inProgress:
+        return this.renderLoadingView()
+      case apiStatusConstants.failure:
+        return this.renderFailureView()
+      default:
+        return null
+    }
+  }
 
   renderProfileSuccessView = () => {
     const {profileData} = this.state
@@ -246,7 +257,6 @@ class Jobs extends Component {
 
   renderProfileList = () => {
     const {profileApiStatus} = this.state
-
     switch (profileApiStatus) {
       case apiStatusConstants.success:
         return this.renderProfileSuccessView()
@@ -275,6 +285,7 @@ class Jobs extends Component {
               changeSearchInput={this.changeSearchInput}
               employmentTypesList={employmentTypesList}
               activeJobId={activeJobId}
+              changeEmploymentType={this.changeEmploymentType}
               changeJobCategory={this.changeJobCategory}
               salaryRangesList={salaryRangesList}
               activeSalaryId={activeSalaryId}

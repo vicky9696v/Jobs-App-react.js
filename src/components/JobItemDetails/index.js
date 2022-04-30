@@ -167,7 +167,7 @@ class JobItemDetails extends Component {
             <img
               className="description-image"
               src={lifeAtCompanyImageUrl}
-              alt={lifeAtCompanyImageUrl}
+              alt="life at company"
             />
           </div>
         </div>

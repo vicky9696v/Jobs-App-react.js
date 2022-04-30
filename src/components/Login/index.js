@@ -55,14 +55,14 @@ class Login extends Component {
     if (jwtToken !== undefined) {
       return <Redirect to="/" />
     }
-    // console.log(username, password)
+
     return (
       <div className="login-container">
         <form className="form-container" onSubmit={this.onSubmitForm}>
           <img
             src="https://assets.ccbp.in/frontend/react-js/logo-img.png"
             alt="website logo"
-            className="logo-image"
+            className="login-image"
           />
           <label htmlFor="user-name" className="label-name">
             USERNAME
@@ -80,14 +80,14 @@ class Login extends Component {
           <input
             type="password"
             id="password"
-            placeholder="Username"
+            placeholder="Password"
             className="input-field"
             onChange={this.onPassword}
           />
           <button type="submit" className="button">
             Login
           </button>
-          {showError && <p className="paragraph">{error}</p>}
+          {showError && <p className="paragraph">* {error}</p>}
         </form>
       </div>
     )

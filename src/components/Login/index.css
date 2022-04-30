@@ -17,8 +17,8 @@
   padding: 25px;
   border-radius: 8px;
 }
-.logo-image {
-  height: 40px;
+.login-image {
+  height: 32px;
   width: 120px;
 }
 
@@ -41,6 +41,7 @@
   padding: 5px;
   border: 1px solid #7e858e;
   border-radius: 2px;
+  color: #ffffff;
 }
 
 .label-name1 {
@@ -66,4 +67,5 @@
 .paragraph {
   color: red;
   font-family: 'Roboto';
+  font-size: 12px;
 }
